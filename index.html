@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RevScore™ Project Evaluator</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+<header>
+
+<div class="logo">
+
+<div class="logo-icon">R</div>
+
+<div>
+
+<h1>RevScore™</h1>
+<p>Project Evaluator</p>
+
+</div>
+
+</div>
+
+</header>
+
+<section class="hero">
+
+<h2>
+Prioritize RevOps Projects
+Like the World's Best Teams
+</h2>
+
+<p>
+
+Answer six business questions to discover whether your project deserves immediate attention or should wait.
+
+</p>
+
+</section>
+
+<div class="card" id="wizardCard">
+
+<div class="progress-wrapper">
+
+<div class="progress-top">
+
+<span>Progress</span>
+
+<span id="progressText">Step 1 of 6</span>
+
+</div>
+
+<div class="progress-bar">
+
+<div class="progress-fill" id="progressFill"></div>
+
+</div>
+
+</div>
+
+<form id="wizard">
+
+<!-- STEP 1 -->
+
+<div class="step active">
+
+<h3>1. Business Impact</h3>
+
+<p>
+How much revenue or business value could this project generate?
+</p>
+
+<div class="options">
+
+<label>
+
+<input type="radio" name="impact" value="20">
+
+Huge business impact
+
+</label>
+
+<label>
+
+<input type="radio" name="impact" value="15">
+
+Strong impact
+
+</label>
+
+<label>
+
+<input type="radio" name="impact" value="10">
+
+Moderate impact
+
+</label>
+
+<label>
+
+<input type="radio" name="impact" value="5">
+
+Small impact
+
+</label>
+
+<label>
+
+<input type="radio" name="impact" value="0">
+
+Minimal impact
+
+</label>
+
+</div>
+
+</div>
+
+<!-- STEP 2 -->
+
+<div class="step">
+
+<h3>2. Implementation Effort</h3>
+
+<p>
+
+How difficult is implementation?
+
+</p>
+
+<div class="options">
+
+<label>
+
+<input type="radio" name="effort" value="20">
+
+Very Easy
+
+</label>
+
+<label>
+
+<input type="radio" name="effort" value="15">
+
+Easy
+
+</label>
+
+<label>
+
+<input type="radio" name="effort" value="10">
+
+Medium
+
+</label>
+
+<label>
+
+<input type="radio" name="effort" value="5">
+
+Hard
+
+</label>
+
+<label>
+
+<input type="radio" name="effort" value="0">
+
+Extremely Hard
+
+</label>
+
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+
+<div class="step">
+
+<h3>3. People Impacted</h3>
+
+<p>
+
+How many teams benefit?
+
+</p>
+
+<div class="options">
+
+<label>
+
+<input type="radio" name="people" value="20">
+
+Entire Company
+
+</label>
+
+<label>
+
+<input type="radio" name="people" value="15">
+
+Several Departments
+
+</label>
+
+<label>
+
+<input type="radio" name="people" value="10">
+
+One Department
+
+</label>
+
+<label>
+
+<input type="radio" name="people" value="5">
+
+Small Team
+
+</label>
+
+<label>
+
+<input type="radio" name="people" value="0">
+
+One Person
+
+</label>
+
+</div>
+
+</div>
+
+<!-- STEP 4 -->
+
+<div class="step">
+
+<h3>4. Learning Curve</h3>
+
+<p>
+
+How quickly can the team adopt it?
+
+</p>
+
+<div class="options">
+
+<label>
+
+<input type="radio" name="learning" value="10">
+
+Immediate
+
+</label>
+
+<label>
+
+<input type="radio" name="learning" value="8">
+
+A few days
+
+</label>
+
+<label>
+
+<input type="radio" name="learning" value="6">
+
+1-2 weeks
+
+</label>
+
+<label>
+
+<input type="radio" name="learning" value="3">
+
+Several weeks
+
+</label>
+
+<label>
+
+<input type="radio" name="learning" value="0">
+
+Months
+
+</label>
+
+</div>
+
+</div>
+
+<!-- STEP 5 -->
+
+<div class="step">
+
+<h3>5. Business Criticality</h3>
+
+<p>
+
+How urgent is this initiative?
+
+</p>
+
+<div class="options">
+
+<label>
+
+<input type="radio" name="criticality" value="20">
+
+Mission Critical
+
+</label>
+
+<label>
+
+<input type="radio" name="criticality" value="15">
+
+High Priority
+
+</label>
+
+<label>
+
+<input type="radio" name="criticality" value="10">
+
+Medium
+
+</label>
+
+<label>
+
+<input type="radio" name="criticality" value="5">
+
+Low
+
+</label>
+
+<label>
+
+<input type="radio" name="criticality" value="0">
+
+Nice to Have
+
+</label>
+
+</div>
+
+</div>
+
+<!-- STEP 6 -->
+
+<div class="step">
+
+<h3>6. Strategic Alignment</h3>
+
+<p>
+
+Does this support company strategy?
+
+</p>
+
+<div class="options">
+
+<label>
+
+<input type="radio" name="strategy" value="10">
+
+Perfect Alignment
+
+</label>
+
+<label>
+
+<input type="radio" name="strategy" value="8">
+
+Strong Alignment
+
+</label>
+
+<label>
+
+<input type="radio" name="strategy" value="6">
+
+Partial
+
+</label>
+
+<label>
+
+<input type="radio" name="strategy" value="3">
+
+Weak
+
+</label>
+
+<label>
+
+<input type="radio" name="strategy" value="0">
+
+No Alignment
+
+</label>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button type="button" id="prevBtn">
+
+← Previous
+
+</button>
+
+<button type="button" id="nextBtn">
+
+Next →
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<!-- RESULTS -->
+
+<section id="results" class="hidden">
+
+<div class="result-card">
+
+<div class="circle">
+
+<div class="circle-inner">
+
+<span id="finalScore">0</span>
+
+<small>/100</small>
+
+</div>
+
+</div>
+
+<h2 id="priorityTitle">
+
+Highest Priority
+
+</h2>
+
+<p id="recommendation">
+
+Recommendation goes here
+
+</p>
+
+<div class="breakdown">
+
+<div>
+
+<span>Business Impact</span>
+
+<strong id="impactScore">0</strong>
+
+</div>
+
+<div>
+
+<span>Implementation</span>
+
+<strong id="effortScore">0</strong>
+
+</div>
+
+<div>
+
+<span>People</span>
+
+<strong id="peopleScore">0</strong>
+
+</div>
+
+<div>
+
+<span>Learning</span>
+
+<strong id="learningScore">0</strong>
+
+</div>
+
+<div>
+
+<span>Criticality</span>
+
+<strong id="criticalityScore">0</strong>
+
+</div>
+
+<div>
+
+<span>Strategy</span>
+
+<strong id="strategyScore">0</strong>
+
+</div>
+
+</div>
+
+<div class="cta">
+
+<a
+
+href="https://rev-score.com"
+
+target="_blank"
+
+class="cta-button">
+
+Explore the Complete RevScore™ Framework
+
+</a>
+
+</div>
+
+<button id="restart">
+
+Evaluate Another Project
+
+</button>
+
+</div>
+
+</section>
+
+<footer>
+
+<p>
+
+Built with ❤️ using the RevScore™ Prioritization Framework
+
+</p>
+
+</footer>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
