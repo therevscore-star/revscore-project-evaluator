@@ -1,6 +1,5 @@
 /* ==========================================
-   RevScore™ Project Evaluator
-   script.js
+   RevScore™ Calculator v2
 ========================================== */
 
 const steps = document.querySelectorAll(".step");
@@ -17,357 +16,554 @@ const results = document.getElementById("results");
 
 const restart = document.getElementById("restart");
 
-let currentStep = 0;
+const leadModal = document.getElementById("leadModal");
+const submitLead = document.getElementById("submitLead");
 
-/* ==========================
+let currentStep = 0;
+let calculatorResult = null;
+
+/* ==========================================
    Navigation
-========================== */
+========================================== */
 
 function showStep(index){
 
-steps.forEach(step=>step.classList.remove("active"));
+    steps.forEach(step=>step.classList.remove("active"));
 
-steps[index].classList.add("active");
+    steps[index].classList.add("active");
 
-progressFill.style.width=((index+1)/steps.length)*100+"%";
+    progressFill.style.width =
+        ((index+1)/steps.length)*100 + "%";
 
-progressText.innerHTML=`Step ${index+1} of ${steps.length}`;
+    progressText.innerHTML =
+        `Step ${index+1} of ${steps.length}`;
 
-prevBtn.style.visibility=index===0?"hidden":"visible";
+    prevBtn.style.visibility =
+        index===0
+        ? "hidden"
+        : "visible";
 
-nextBtn.innerHTML=index===steps.length-1
-?"Calculate RevScore™"
-:"Next →";
+    nextBtn.innerHTML =
+        index===steps.length-1
+        ? "Calculate My RevScore™"
+        : "Next →";
 
 }
 
 showStep(currentStep);
 
-/* ==========================
+/* ==========================================
    Validation
-========================== */
+========================================== */
 
 function validateStep(){
 
-const radios=steps[currentStep].querySelectorAll("input");
+    const radios =
+        steps[currentStep]
+        .querySelectorAll("input");
 
-return [...radios].some(r=>r.checked);
+    return [...radios].some(r=>r.checked);
 
 }
 
-/* ==========================
-   Buttons
-========================== */
+/* ==========================================
+   Navigation Buttons
+========================================== */
 
 nextBtn.addEventListener("click",()=>{
 
-if(!validateStep()){
+    if(!validateStep()){
 
-alert("Please select one option before continuing.");
+        alert(
+            "Please choose an option before continuing."
+        );
 
-return;
+        return;
 
-}
+    }
 
-if(currentStep<steps.length-1){
+    if(currentStep < steps.length-1){
 
-currentStep++;
+        currentStep++;
 
-showStep(currentStep);
+        showStep(currentStep);
 
-}
+        return;
 
-else{
+    }
 
-calculateScore();
-
-}
+    calculateScore();
 
 });
 
 prevBtn.addEventListener("click",()=>{
 
-if(currentStep>0){
+    if(currentStep===0) return;
 
-currentStep--;
+    currentStep--;
 
-showStep(currentStep);
-
-}
+    showStep(currentStep);
 
 });
 
-/* ==========================
-   Get Scores
-========================== */
+/* ==========================================
+   Helpers
+========================================== */
 
 function value(name){
 
-const selected=document.querySelector(`input[name="${name}"]:checked`);
+    const selected =
+        document.querySelector(
+            `input[name="${name}"]:checked`
+        );
 
-return selected?Number(selected.value):0;
+    return selected
+        ? Number(selected.value)
+        : 0;
 
 }
 
-/* ==========================
+/* ==========================================
    Calculate
-========================== */
+========================================== */
 
 function calculateScore(){
 
-const impact=value("impact");
+    const impact = value("impact");
+    const effort = value("effort");
+    const people = value("people");
+    const learning = value("learning");
+    const criticality = value("criticality");
+    const strategy = value("strategy");
 
-const effort=value("effort");
+    const total =
+        impact +
+        effort +
+        people +
+        learning +
+        criticality +
+        strategy;
 
-const people=value("people");
+    calculatorResult = {
 
-const learning=value("learning");
+        impact,
+        effort,
+        people,
+        learning,
+        criticality,
+        strategy,
+        total
 
-const criticality=value("criticality");
+    };
 
-const strategy=value("strategy");
-
-const total=
-
-impact+
-
-effort+
-
-people+
-
-learning+
-
-criticality+
-
-strategy;
-
-showResults({
-
-impact,
-
-effort,
-
-people,
-
-learning,
-
-criticality,
-
-strategy,
-
-total
-
-});
+    openLeadModal();
 
 }
 
-/* ==========================
+/* ==========================================
+   Modal
+========================================== */
+
+function openLeadModal(){
+
+    leadModal.classList.remove("hidden");
+
+}
+
+function closeLeadModal(){
+
+    leadModal.classList.add("hidden");
+
+}
+/* ==========================================
+   Submit Lead
+========================================== */
+
+submitLead.addEventListener("click", submitLeadForm);
+document
+.getElementById("leadEmail")
+.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Enter"){
+
+        submitLeadForm();
+
+    }
+
+});
+
+document
+.getElementById("leadName")
+.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Enter"){
+
+        submitLeadForm();
+
+    }
+
+});
+
+async function submitLeadForm(){
+
+    const name =
+        document.getElementById("leadName").value.trim();
+
+    const email =
+        document.getElementById("leadEmail").value.trim();
+
+    const error =
+        document.getElementById("leadError");
+
+    error.innerHTML = "";
+
+    if(name===""){
+
+        error.innerHTML="Please enter your first name.";
+
+        return;
+
+    }
+
+    if(email===""){
+
+        error.innerHTML="Please enter your work email.";
+
+        return;
+
+    }
+
+    const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailRegex.test(email)){
+
+        error.innerHTML="Please enter a valid email.";
+
+        return;
+
+    }
+
+    submitLead.disabled = true;
+
+    submitLead.innerHTML =
+        "Generating Results...";
+
+    let priority = "";
+
+    if(calculatorResult.total>=80){
+
+        priority="Highest Priority";
+
+    }
+
+    else if(calculatorResult.total>=70){
+
+        priority="Strong Candidate";
+
+    }
+
+    else if(calculatorResult.total>=60){
+
+        priority="Consider Carefully";
+
+    }
+
+    else{
+
+        priority="Low Priority";
+
+    }
+
+    try{
+
+        const response = await fetch(
+
+            "https://formspree.io/f/mdaqyzog",
+
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":"application/json",
+
+                    "Accept":"application/json"
+
+                },
+
+                body:JSON.stringify({
+
+                    name,
+
+                    email,
+
+                    score:calculatorResult.total,
+
+                    priority,
+
+                    impact:calculatorResult.impact,
+
+                    effort:calculatorResult.effort,
+
+                    people:calculatorResult.people,
+
+                    learning:calculatorResult.learning,
+
+                    criticality:calculatorResult.criticality,
+
+                    strategy:calculatorResult.strategy,
+
+                    source:"RevScore Calculator",
+
+                    version:"2.0"
+
+                })
+
+            }
+
+        );
+
+        if(!response.ok){
+
+    const message = await response.text();
+
+    console.log(message);
+
+    throw new Error(message);
+
+}
+
+        closeLeadModal();
+
+        showResults(calculatorResult);
+
+    }
+
+    catch(e){
+
+    console.error(e);
+
+    error.innerHTML = e.message;
+
+    submitLead.disabled = false;
+
+    submitLead.innerHTML = "Unlock My Results →";
+
+}
+
+    }
+
+
+/* ==========================================
    Results
-========================== */
+========================================== */
 
 function showResults(data){
 
-wizardCard.style.display="none";
+    wizardCard.style.display="none";
 
-results.classList.remove("hidden");
+    results.classList.remove("hidden");
 
-animateScore(data.total);
+    animateScore(data.total);
 
-document.getElementById("impactScore").textContent=data.impact;
+    document.getElementById("impactScore").textContent=data.impact;
 
-document.getElementById("effortScore").textContent=data.effort;
+    document.getElementById("effortScore").textContent=data.effort;
 
-document.getElementById("peopleScore").textContent=data.people;
+    document.getElementById("peopleScore").textContent=data.people;
 
-document.getElementById("learningScore").textContent=data.learning;
+    document.getElementById("learningScore").textContent=data.learning;
 
-document.getElementById("criticalityScore").textContent=data.criticality;
+    document.getElementById("criticalityScore").textContent=data.criticality;
 
-document.getElementById("strategyScore").textContent=data.strategy;
+    document.getElementById("strategyScore").textContent=data.strategy;
 
-const title=document.getElementById("priorityTitle");
+    const title=document.getElementById("priorityTitle");
 
-const text=document.getElementById("recommendation");
+    const recommendation=document.getElementById("recommendation");
 
-if(data.total>=80){
+    if(data.total>=80){
 
-title.innerHTML="🏆 Highest Priority";
+        title.innerHTML="🏆 Highest Priority";
 
-text.innerHTML=
+        recommendation.innerHTML=
 
-"This initiative should move to the top of your roadmap. It delivers significant business value while aligning strongly with organizational goals.";
+        "Excellent choice. This initiative deserves immediate attention and should be prioritized on your roadmap.";
+
+    }
+
+    else if(data.total>=70){
+
+        title.innerHTML="🟢 Strong Candidate";
+
+        recommendation.innerHTML=
+
+        "A valuable initiative with strong business potential. Consider scheduling it during your current planning cycle.";
+
+    }
+
+    else if(data.total>=60){
+
+        title.innerHTML="🟡 Consider Carefully";
+
+        recommendation.innerHTML=
+
+        "This project has value but should compete with higher-impact initiatives before receiving investment.";
+
+    }
+
+    else{
+
+        title.innerHTML="🔴 Low Priority";
+
+        recommendation.innerHTML=
+
+        "This initiative is unlikely to deliver meaningful business impact today. Reassess its timing or scope.";
+
+    }
 
 }
 
-else if(data.total>=70){
-
-title.innerHTML="🟢 Strong Candidate";
-
-text.innerHTML=
-
-"A valuable initiative that deserves consideration during the current planning cycle.";
-
-}
-
-else if(data.total>=60){
-
-title.innerHTML="🟡 Consider Carefully";
-
-text.innerHTML=
-
-"This project has potential but competes with higher-impact initiatives. Review timing and available resources.";
-
-}
-
-else{
-
-title.innerHTML="🔴 Low Priority";
-
-text.innerHTML=
-
-"This project is unlikely to deliver enough value today. Consider postponing or redefining its scope.";
-
-}
-
-}
-
-/* ==========================
-   Animated Counter
-========================== */
+/* ==========================================
+   Animated Score
+========================================== */
 
 function animateScore(score){
 
-const element=document.getElementById("finalScore");
+    const element=document.getElementById("finalScore");
 
-let current=0;
+    let current=0;
 
-const speed=15;
+    const timer=setInterval(()=>{
 
-const timer=setInterval(()=>{
+        current++;
 
-current++;
+        element.textContent=current;
 
-element.textContent=current;
+        if(current>=score){
 
-if(current>=score){
+            clearInterval(timer);
 
-clearInterval(timer);
+        }
 
-}
-
-},speed);
+    },15);
 
 }
 
-/* ==========================
+/* ==========================================
    Restart
-========================== */
+========================================== */
 
 restart.addEventListener("click",()=>{
 
-wizard.reset();
+    wizard.reset();
 
-results.classList.add("hidden");
+    calculatorResult = null;
 
-wizardCard.style.display="block";
+    currentStep = 0;
 
-currentStep=0;
+    results.classList.add("hidden");
 
-showStep(currentStep);
+    wizardCard.style.display = "block";
 
-window.scrollTo({
+    showStep(currentStep);
 
-top:0,
+    // Reset modal fields
+    document.getElementById("leadName").value = "";
+    document.getElementById("leadEmail").value = "";
+    document.getElementById("leadError").innerHTML = "";
 
-behavior:"smooth"
+    // Reset button
+    submitLead.disabled = false;
+    submitLead.innerHTML = "Unlock My Results →";
+
+    // Close modal if it's open
+    closeLeadModal();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 });
 
-});
-
-/* ==========================
-   Keyboard Support
-========================== */
+/* ==========================================
+   Keyboard
+========================================== */
 
 document.addEventListener("keydown",(e)=>{
 
-if(e.key==="ArrowRight"){
+    if(leadModal.classList.contains("hidden")){
 
-nextBtn.click();
+        if(e.key==="ArrowRight"){
 
-}
+            nextBtn.click();
 
-if(e.key==="ArrowLeft"){
+        }
 
-prevBtn.click();
+        if(e.key==="ArrowLeft"){
 
-}
+            prevBtn.click();
 
-if(e.key==="Enter"){
+        }
 
-if(document.activeElement.tagName!=="BUTTON"){
-
-nextBtn.click();
-
-}
-
-}
+    }
 
 });
 
-/* ==========================
-   Progress Animation
-========================== */
+/* ==========================================
+   Option Animation
+========================================== */
 
 document.querySelectorAll("input").forEach(input=>{
 
-input.addEventListener("change",()=>{
+    input.addEventListener("change",()=>{
 
-const label=input.parentElement;
+        input.parentElement.animate(
 
-label.animate(
+            [
 
-[
+                {
 
-{
+                    transform:"scale(1)"
 
-transform:"scale(1)"
+                },
 
-},
+                {
 
-{
+                    transform:"scale(1.03)"
 
-transform:"scale(1.02)"
+                },
 
-},
+                {
 
-{
+                    transform:"scale(1)"
 
-transform:"scale(1)"
+                }
 
-}
+            ],
 
-],
+            {
 
-{
+                duration:180
 
-duration:180
+            }
 
-}
+        );
 
-);
-
-});
+    });
 
 });
 
-/* ==========================
-   Console Banner
-========================== */
+/* ==========================================
+   Console
+========================================== */
 
 console.log(
 
-"%cRevScore™ Project Evaluator",
+"%cRevScore™ Calculator v2",
 
 "color:#635BFF;font-size:18px;font-weight:bold"
 
@@ -375,6 +571,6 @@ console.log(
 
 console.log(
 
-"Built with vanilla HTML, CSS & JavaScript."
+"Lead generation enabled with Formspree."
 
 );
